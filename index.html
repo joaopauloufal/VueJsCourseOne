@@ -16,7 +16,7 @@
         <div id="app" class="container">
 
             <div class="row">
-                <h3>Campeonato Brasileiro - Série A - 2018</h3>
+                <h1>Campeonato Brasileiro - Série A - 2018</h3>
             </div>
             <div class="row">
                 <div class="col-md-12">
@@ -62,6 +62,24 @@
                             </tr>
                         </tbody>
                     </table>
+                    <h3>Times classificados para a libertadores</h3>
+                    <ul>
+                        <li v-for="time in timesLibertadores">
+                            <td>
+                                <img :src="time.escudo" alt="" class="escudo">
+                                {{time.nome | ucwords}}                           
+                            </td>
+                        </li>
+                    </ul>
+                    <h3>Times rebaixados</h3>
+                    <ul>
+                        <li v-for="time in timesRebaixados">
+                            <td>
+                                <img :src="time.escudo" alt="" class="escudo">
+                                {{time.nome | ucwords}}                           
+                            </td>
+                        </li> 
+                    </ul>
                 </div>
             </div>
 
@@ -153,7 +171,7 @@
                 data: {
                     gols: '3',
                     times : [
-                        new Time('Palmeiras', 'assets/palmeiras_60x60.png'),
+                        new Time('palmeiras', 'assets/palmeiras_60x60.png'),
                         new Time('Internacional', 'assets/internacional_60x60.png'),
                         new Time('Flamengo', 'assets/flamengo_60x60.png'),
                         new Time('Atlético-MG', 'assets/atletico_mg_60x60.png'),
@@ -186,6 +204,18 @@
                         }
                     },
                     visao : 'tabela',
+                },
+
+                computed : {
+
+                    timesLibertadores(){
+                        return this.times.slice(0, 6);
+                    },
+
+                    timesRebaixados(){
+                        return this.times.slice(16, 20);
+                    }
+
                 },
 
                 methods : {
