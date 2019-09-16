@@ -23,44 +23,51 @@
                     <button class="btn btn-primary" @click="criarNovoJogo">Novo Jogo</button>
                 </div>
             </div>
-            <div>
+            <br>
+            <div class="row">
+                <div class="col-md-12" v-show="visao != 'tabela'">
+                    <form class="form-inline">
+                        <input type="text" class="form-control col-md-1" v-model="novoJogo.casa.gols">
+                        {{novoJogo.casa.time ? novoJogo.casa.time.nome : ''}}
+                        <img :src="novoJogo.casa.time ? novoJogo.casa.time.escudo: ''" alt="" class="escudo">
+                        <span>X</span>
+                        <img :src="novoJogo.fora.time ? novoJogo.fora.time.escudo: ''" alt="" class="escudo">
+                        <input type="text" class="form-control col-md-1" v-model="novoJogo.fora.gols">
+                        {{novoJogo.fora.time ? novoJogo.fora.time.nome : ''}}
+                        <button type="button" class="btn btn-primary" @click="fimJogo">Fim de Jogo</button>
+                        
+                    </form>
+                </div>
+                <div class="col-md-12" v-show="visao === 'tabela'">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Pontos</th>
+                                <th>GM</th>
+                                <th>GS</th>
+                                <th>Saldo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="time in times">
+                                <td>
+                                    <img :src="time.escudo" alt="" class="escudo">
+                                    {{time.nome}}                           
+                                </td>
+                                <td>{{time.pontos}}</td>
+                                <td>{{time.gm}}</td>
+                                <td>{{time.gs}}</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <form class="form-inline">
-                <input type="text" class="form-control col-md-1" v-model="novoJogo.casa.gols">
-                {{novoJogo.casa.time ? novoJogo.casa.time.nome : ''}}
-                <img :src="novoJogo.casa.time ? novoJogo.casa.time.escudo: ''" alt="" class="escudo">
-                <span>X</span>
-                <img :src="novoJogo.fora.time ? novoJogo.fora.time.escudo: ''" alt="" class="escudo">
-                <input type="text" class="form-control col-md-1" v-model="novoJogo.fora.gols">
-                
-                {{novoJogo.fora.time ? novoJogo.fora.time.nome : ''}}
-                
-            </form>
 
-            <button type="button" class="btn btn-primary" @click="fimJogo">Fim de Jogo</button>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Pontos</th>
-                        <th>GM</th>
-                        <th>GS</th>
-                        <th>Saldo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="time in times">
-                        <td>
-                            <img :src="time.escudo" alt="" class="escudo">
-                            {{time.nome}}                           
-                        </td>
-                        <td>{{time.pontos}}</td>
-                        <td>{{time.gm}}</td>
-                        <td>{{time.gs}}</td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
+
+            
+
         </div>
 
          <!-- development version, includes helpful console warnings -->
@@ -84,6 +91,7 @@
                     if (this.foiEmpate(golsMarcados, golsSofridos)){
                         this.empate(golsMarcados, golsSofridos);
                         timeVisitante.empate(golsMarcados, golsSofridos);
+                        return;
                     }
 
                     if (this.foiVitoria(golsMarcados, golsSofridos)){
@@ -176,7 +184,8 @@
                             time : null,
                             gols : 0
                         }
-                    }
+                    },
+                    visao : 'tabela',
                 },
 
                 methods : {
@@ -196,6 +205,7 @@
                         this.novoJogo.fora.time = this.times[indiceFora];
                         this.novoJogo.fora.gols = 0;
                         console.log(this.novoJogo);
+                        this.visao = 'placar';
 
                     },
 
@@ -206,6 +216,7 @@
                         var timeAdversario = this.novoJogo.fora.time;
                         var timeCasa = this.novoJogo.casa.time;
                         timeCasa.fimJogo(timeAdversario, golsMarcados, golsSofridos);
+                        this.visao = 'tabela';
 
                     }
                 }
